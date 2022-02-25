@@ -1,0 +1,29 @@
+(var_datetime as datetimezone) =>
+
+
+let
+
+date = DateTime.Date(var_datetime),
+time = DateTime.Time(var_datetime),
+
+
+
+firstSundayOfNovember = Date.StartOfWeek(#date(Date.Year(date), 11, 7), Day.Sunday),
+SecondSundayOfMarch = Date.StartOfWeek(#date(Date.Year(date), 3, 14), Day.Sunday),
+
+isSummerTime =	(date = SecondSundayOfMarch and time >= #time(1,0,0))
+	        or
+		(date > SecondSundayOfMarch and date < firstSundayOfNovember) 
+		or 
+		(date = firstSundayOfNovember and time >= #time(1,0,0)),
+
+
+timeZone = (5 - Number.From(isSummerTime))*-1,
+
+EST = 
+DateTimeZone.SwitchZone(var_datetime,timeZone)
+
+
+
+in
+    EST
